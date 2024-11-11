@@ -369,7 +369,7 @@ export function formatVoteCount(calculated: CalculatedVoteCount) {
   rawWagons.forEach(({ id, name, size, value }) => {
     const paddedName = name.padEnd(longestWagonName, " ");
     const paddedSize = size.toString().padStart(longestSizeCharacters, " ");
-    const modifier = id ? calculated.additionalVotes.get(name) : 0;
+    const modifier = id ? calculated.additionalVotes.get(id) : 0;
     let parsedValue = `${paddedName} ${paddedSize}`;
     if (modifier && modifier >= 1) parsedValue += ` [+${modifier}]`;
     parsedValue += ` - ${value}`;
