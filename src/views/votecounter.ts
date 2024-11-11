@@ -288,13 +288,12 @@ export function formatVoteCount(calculated: CalculatedVoteCount) {
 
   wagons.forEach((wagon, key) => {
     if (wagon.length > 0) {
-      const wagonVoteWeight = wagon.reduce(
-        (acc, cur) =>
-          acc +
-          (calculated.weights.get(cur) ?? 1) +
-          (calculated.additionalVotes.get(cur) ?? 0),
-        0
-      );
+      const wagonVoteWeight =
+        wagon.reduce(
+          (acc, cur) => acc + (calculated.weights.get(cur) ?? 1),
+          0
+        ) + (calculated.additionalVotes.get(key) ?? 0);
+
       const name = `${players.get(key) ?? `<@${key}>`}: `;
 
       const voteArray = wagon.map((id) => {
