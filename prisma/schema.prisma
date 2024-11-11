@@ -131,12 +131,13 @@ model Player {
   discordId       String
   automatedGameId String?
 
-  voteCounter   VoteCounter? @relation(fields: [voteCounterId], references: [id])
-  user          User         @relation(fields: [discordId], references: [discordId])
-  votesIncoming Vote[]       @relation(name: "votedTarget")
-  votesOutgoing Vote[]       @relation(name: "voter")
-  voteWeight    Int          @default(1)
-  canBeVoted    Boolean      @default(true)
+  voteCounter     VoteCounter? @relation(fields: [voteCounterId], references: [id])
+  user            User         @relation(fields: [discordId], references: [discordId])
+  votesIncoming   Vote[]       @relation(name: "votedTarget")
+  votesOutgoing   Vote[]       @relation(name: "voter")
+  voteWeight      Int          @default(1)
+  additionalVotes Int          @default(0)
+  canBeVoted      Boolean      @default(true)
 
   @@unique([voteCounterId, discordId])
 }
