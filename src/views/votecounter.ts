@@ -8,6 +8,7 @@ import AddPlayersButton from "../events/buttons/manageVotecount/players/addPlaye
 import RemovePlayersButton from "../events/buttons/manageVotecount/players/removePlayers";
 import ReplacePlayersButton from "../events/buttons/manageVotecount/players/replacePlayer";
 import ManageVoteWeight from "../events/buttons/manageVotecount/state/changeVoteWeight";
+import ManageExtraVotes from "../events/buttons/manageVotecount/state/changeExtraVotes";
 import JumpToDayButton from "../events/buttons/manageVotecount/state/jumpToDay";
 import toggleVotable from "../events/buttons/manageVotecount/state/toggleVotable";
 import {
@@ -105,6 +106,7 @@ export function genStateEmbed(vc: FullVoteCount): BaseMessageOptions {
     GoHomeButton.build(),
     JumpToDayButton.build(),
     ManageVoteWeight.build(),
+    ManageExtraVotes.build(),
     toggleVotable.build()
   );
   return {
