@@ -316,6 +316,18 @@ export function formatVoteCount(calculated: CalculatedVoteCount) {
     }
   });
 
+  for (const [id, amount] of calculated.additionalVotes) {
+    if (amount <= 0) continue;
+    if (rawWagons.find((v) => v.id == id)) continue;
+
+    rawWagons.push({
+      id,
+      name: `${players.get(id) ?? `<@${id}>`}: `,
+      size: amount,
+      value: "Nobody",
+    });
+  }
+
   if (calculated.votingNoLynch.length > 0) {
     const noLynchVoteWeight = calculated.votingNoLynch.reduce(
       (acc, cur) => acc + (calculated.weights.get(cur) ?? 1),
