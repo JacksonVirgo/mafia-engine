@@ -271,6 +271,7 @@ export function formatVoteCount(calculated: CalculatedVoteCount) {
   if (calculated.majorityReached) format += "- Majority has been reached -\n\n";
 
   type Wagon = {
+    id?: Snowflake;
     name: string;
     size: number;
     value: string;
@@ -292,17 +293,16 @@ export function formatVoteCount(calculated: CalculatedVoteCount) {
       const voteArray = wagon.map((id) => {
         const player = players.get(id) ?? `<@${id}>`;
         const playerVoteWeight = calculated.weights.get(id);
-        const playerAdditionalVotes = calculated.additionalVotes.get(id);
         let str = player;
         let modifier = "";
-        if (playerVoteWeight) modifier += `x${playerVoteWeight} `;
-        if (playerAdditionalVotes && playerAdditionalVotes > 0)
-          modifier += `+${playerAdditionalVotes} `;
+        if (playerVoteWeight && playerVoteWeight > 1)
+          modifier += `x${playerVoteWeight} `;
         if (modifier != "") str += ` [${modifier.trim()}]`;
         return str;
       });
 
       rawWagons.push({
+        id: key,
         name,
         size: wagonVoteWeight,
         value: voteArray.length > 0 ? voteArray.join(", ") : "None",
@@ -364,10 +364,13 @@ export function formatVoteCount(calculated: CalculatedVoteCount) {
 
   let noLynchValue: string | undefined;
   let notVotingValue: string | undefined;
-  rawWagons.forEach(({ name, size, value }) => {
+  rawWagons.forEach(({ id, name, size, value }) => {
     const paddedName = name.padEnd(longestWagonName, " ");
     const paddedSize = size.toString().padStart(longestSizeCharacters, " ");
-    const parsedValue = `${paddedName} ${paddedSize} - ${value}`;
+    const modifier = id ? calculated.additionalVotes.get(name) : 0;
+    let parsedValue = `${paddedName} ${paddedSize}`;
+    if (modifier && modifier >= 1) parsedValue += ` [+${modifier}]`;
+    parsedValue += ` - ${value}`;
 
     if (name.includes("Skipping")) noLynchValue = parsedValue;
     else if (name.includes("Abstaining")) notVotingValue = parsedValue;
