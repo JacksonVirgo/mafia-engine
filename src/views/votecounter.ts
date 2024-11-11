@@ -165,17 +165,22 @@ export function calculateVoteCount(vc: FullVoteCount) {
 
   vc.votes.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
   const checkMajorityReached = () => {
-    return (
-      Math.max(
-        ...Array.from(wagons.values()).map((val) =>
-          val.reduce(
-            (acc, cur) =>
-              acc + (weights.get(cur) ?? 1) + (extraVotes.get(cur) ?? 0),
-            0
-          )
-        )
-      ) >= Math.floor(vc.players.length / 2 + 1)
-    );
+    let topWagonSize = 0;
+
+    for (const [wagon, votes] of wagons) {
+      const additionalVotes = extraVotes.get(wagon);
+      let totalVoteWeight = votes.reduce(
+        (acc, cur) => acc + (weights.get(cur) ?? 1),
+        0
+      );
+      if (totalVoteWeight > 0) totalVoteWeight += additionalVotes ?? 0;
+
+      if (totalVoteWeight > topWagonSize) {
+        topWagonSize = totalVoteWeight;
+      }
+    }
+
+    return topWagonSize >= Math.floor(vc.players.length / 2 + 1);
   };
 
   for (const player of vc.players) {
