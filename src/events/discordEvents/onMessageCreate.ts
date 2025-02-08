@@ -55,7 +55,7 @@ export default async function OnMessageCreate(msg: Message<boolean>) {
   });
 
   const msgContent =
-    msg.content + "\n" + stickerURLs.join("\n") + ` (${profile.name})`;
+    msg.content + "\n" + stickerURLs.join("\n") + `(${profile.name})`;
 
   if (webhook) {
     webhook
