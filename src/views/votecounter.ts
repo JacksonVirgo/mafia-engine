@@ -139,13 +139,8 @@ export function calculateVoteCount(vc: FullVoteCount) {
 	}
 
 	for (const vote of vc.votes) {
-		if (vc.majorityAfter) {
-			const now = new Date();
-			const after = new Date(vc.majorityAfter);
-
-			if (now > after) canMajorityBeReached = true;
-
-			console.log(now.getTime(), after.getTime(), now.getTime() - after.getTime(), canMajorityBeReached);
+		if (vc.majorityAfter && !vc.majority) {
+			canMajorityBeReached = vote.createdAt >= vc.majorityAfter;
 		}
 
 		if (canMajorityBeReached && checkMajorityReached()) continue;
@@ -186,6 +181,10 @@ export function calculateVoteCount(vc: FullVoteCount) {
 			});
 			if (!isVoting && !votingNoLynch.includes(player)) nonVoters.push(player);
 		});
+	}
+
+	if (vc.majorityAfter && !vc.majority && new Date() >= vc.majorityAfter) {
+		canMajorityBeReached = true;
 	}
 
 	return {
